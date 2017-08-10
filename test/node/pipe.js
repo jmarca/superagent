@@ -44,6 +44,22 @@ describe('request pipe', function(){
     stream.pipe(req);
   })
 
+  it('should act as a writable stream for images', function(done){
+    var req = request.post(base);
+    var stream = fs.createReadStream('test/node/fixtures/plot.png');
+      stream.on('data',(chunk)=>{
+          console.log(`Received ${chunk.length} bytes of data.`);
+      })
+      req.type('png');
+      req.accept('png');
+      req.on('response', function(res){
+          console.log('got response');
+          done();
+    });
+
+    stream.pipe(req);
+  })
+
   it('should act as a readable stream', function(done){
     var stream = fs.createWriteStream(destPath);
 
